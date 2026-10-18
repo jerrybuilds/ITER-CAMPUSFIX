@@ -6,6 +6,7 @@
 function showToast(type, title, message, duration = 4000) {
   const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
   const container = document.getElementById('toast-container');
+  if (!container) { console.log(`[${type}] ${title}: ${message || ''}`); return; }
   const toast = document.createElement('div');
   toast.className = `toast toast-${type}`;
   toast.innerHTML = `
@@ -22,31 +23,36 @@ function showToast(type, title, message, duration = 4000) {
   }, duration);
 }
 
-// ── Confirm modal ──────────────────────────────────────────
+// ── Confirm modal (fixed: no listener leak) ───────────────
 function showConfirm(icon, title, message, okLabel = 'Confirm', dangerBtn = true) {
   return new Promise((resolve) => {
     const modal = document.getElementById('confirm-modal');
+    const okBtn = document.getElementById('confirm-ok');
+    const cancelBtn = document.getElementById('confirm-cancel');
+
     document.getElementById('confirm-icon').textContent = icon;
     document.getElementById('confirm-title').textContent = title;
     document.getElementById('confirm-message').textContent = message;
-    const okBtn = document.getElementById('confirm-ok');
     okBtn.textContent = okLabel;
     okBtn.className = `btn ${dangerBtn ? 'btn-danger' : 'btn-primary'}`;
     modal.classList.remove('hidden');
+
+    const backdropClick = (e) => { if (e.target === modal) cancel(); };
     const ok = () => { cleanup(); resolve(true); };
     const cancel = () => { cleanup(); resolve(false); };
     const cleanup = () => {
       modal.classList.add('hidden');
       okBtn.removeEventListener('click', ok);
-      document.getElementById('confirm-cancel').removeEventListener('click', cancel);
+      cancelBtn.removeEventListener('click', cancel);
+      modal.removeEventListener('click', backdropClick);
     };
     okBtn.addEventListener('click', ok);
-    document.getElementById('confirm-cancel').addEventListener('click', cancel);
-    modal.addEventListener('click', (e) => { if (e.target === modal) cancel(); });
+    cancelBtn.addEventListener('click', cancel);
+    modal.addEventListener('click', backdropClick);
   });
 }
 
-// ── Language detection (keyword-based) ────────────────────
+// ── Language detection ────────────────────────────────────
 const LANG_HINTS = {
   hi: ['है', 'का', 'में', 'नहीं', 'कृपया', 'बंद', 'चल', 'ठीक', 'हो', 'रहा', 'पानी', 'बिजली'],
   ta: ['இல்லை', 'தண்ணீர்', 'வேண்டும்', 'இல்'],
@@ -85,7 +91,7 @@ function classifyCategory(text) {
   return { category: sorted[0][0], confidence: parseFloat(confidence.toFixed(2)) };
 }
 
-// ── Routing engine ─────────────────────────────────────────
+// ── Routing engine ────────────────────────────────────────
 const CAT_TO_DEPT = {
   electrical: 'd1', plumbing: 'd1', furniture: 'd1', structural: 'd1',
   it: 'd2', wifi: 'd2',
@@ -99,8 +105,8 @@ function routeReport(category, confidence) {
   return { dept_id, dept_name: dept?.name || 'Administration', confidence, needs_review: confidence < 0.80 };
 }
 
-// ── Duplicate detector ─────────────────────────────────────
-const GEO_THRESHOLD_M = 150; // meters
+// ── Duplicate detector ────────────────────────────────────
+const GEO_THRESHOLD_M = 150;
 const TEXT_THRESHOLD  = 0.45;
 
 function haversineM(lat1, lng1, lat2, lng2) {
@@ -133,7 +139,7 @@ function findDuplicates(newReport) {
   return matches.sort((a,b) => b.score - a.score).slice(0, 3);
 }
 
-// ── SLA helpers ────────────────────────────────────────────
+// ── SLA helpers ───────────────────────────────────────────
 function getSLAStatus(report) {
   const dept = DB.find('departments', report.dept_id);
   if (!dept) return { status: 'ok', hoursLeft: null, label: '' };
@@ -146,22 +152,18 @@ function getSLAStatus(report) {
   return { status: 'ok', hoursLeft, label: `${hoursLeft}h left` };
 }
 
-// ── Audit logger ───────────────────────────────────────────
+// ── Audit logger ──────────────────────────────────────────
 function auditLog(action, actor_id, entity_type, entity_id, meta = {}) {
   const entry = {
-    id: 'al' + Date.now(),
+    id: 'al' + Date.now() + Math.random().toString(36).slice(2,6),
     timestamp: Date.now(),
-    action,
-    actor_id,
-    entity_type,
-    entity_id,
-    meta,
+    action, actor_id, entity_type, entity_id, meta,
   };
   DB.push('auditLog', entry);
   return entry;
 }
 
-// ── Formatting helpers ─────────────────────────────────────
+// ── Formatting helpers ────────────────────────────────────
 function timeAgo(ts) {
   const diff = Date.now() - ts;
   const m = Math.floor(diff / 60000);
@@ -185,7 +187,7 @@ function uid() {
   return Math.random().toString(36).slice(2, 10);
 }
 
-// ── Category meta ──────────────────────────────────────────
+// ── Category meta ─────────────────────────────────────────
 const CAT_META = {
   electrical:  { icon: '⚡', label: 'Electrical', cls: 'cat-electrical' },
   plumbing:    { icon: '🔧', label: 'Plumbing',   cls: 'cat-plumbing' },
@@ -234,7 +236,7 @@ function slaChip(report) {
   return `<span class="sla-timer ${cls}">${icon} SLA: ${s.label}</span>`;
 }
 
-// ── Map marker color by category ──────────────────────────
+// ── Map markers ───────────────────────────────────────────
 const CAT_COLORS = {
   electrical: '#F59E0B', plumbing: '#38BDF8', it: '#818CF8',
   safety: '#F87171', cleanliness: '#34D399', furniture: '#FB923C', other: '#94A3B8',
@@ -256,27 +258,25 @@ function mapIcon(report) {
   });
 }
 
-// ── Leaflet tile layer — theme-aware ───────────────────────
+// ── Leaflet tile layer ────────────────────────────────────
 function getTileLayer() {
   const isLight = document.body.classList.contains('light-mode');
-  if (isLight) {
-    // CARTO Voyager: warm, detailed, looks great on light backgrounds
-    return L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; OpenStreetMap &copy; CARTO',
-      maxZoom: 19,
-      subdomains: 'abcd',
-    });
-  }
-  return L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  const url = isLight
+    ? 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png'
+    : 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png';
+
+  return L.tileLayer(url, {
     attribution: '&copy; OpenStreetMap &copy; CARTO',
-    maxZoom: 19,
     subdomains: 'abcd',
+    maxZoom: 20,
+    minZoom: 3,
+    crossOrigin: true,
   });
 }
-// Keep old name as alias for any legacy calls
 const darkTileLayer = getTileLayer;
 
-// ── Campus center & ITER SOA Landmarks ──────────────────
+
+// ── Campus center & landmarks ─────────────────────────────
 const CAMPUS_CENTER = [20.2482, 85.8012];
 const CAMPUS_ZOOM   = 17;
 
@@ -296,16 +296,10 @@ const ITER_CAMPUS_LOCATIONS = [
   { name: 'ITER GIRLS HOSTEL GATE', lat: 20.24760935445469, lng: 85.80024331172831, icon: '🚪', tag: 'Hostel', ref: 'LH Girls Gate' },
   { name: 'ITER BH-05', lat: 20.246076389890984, lng: 85.80226879563143, icon: '🛏️', tag: 'Hostel', ref: 'Boys Hostel BH-5' },
   { name: 'BH-10', lat: 20.245713677419047, lng: 85.80236208704476, icon: '🛏️', tag: 'Hostel', ref: 'Boys Hostel BH-10' },
-  { name: 'BOYS HOSTEL 12 (BH-12)', lat: 20.246350, lng: 85.801650, icon: '🛏️', tag: 'Hostel', ref: 'BH-12 Block' },
   { name: 'Lh 1 Girls Hostel (ITER Campus)', lat: 20.247363254034024, lng: 85.80063168293206, icon: '🛏️', tag: 'Hostel', ref: 'LH-1 Girls Hostel' },
-  { name: 'LH-2 Hostel (Girls Hostel)', lat: 20.247200, lng: 85.800500, icon: '🛏️', tag: 'Hostel', ref: 'LH-2 Girls Hostel' },
-  { name: 'LH 3 Girls Hostel', lat: 20.246950, lng: 85.801000, icon: '🛏️', tag: 'Hostel', ref: 'LH-3 Girls Hostel' },
   { name: 'SOA Auditorium', lat: 20.24916909295392, lng: 85.8015785371737, icon: '🎭', tag: 'Events', ref: 'Main Auditorium' },
   { name: "Office of Dean - Siksha 'O' Anusandhan University", lat: 20.24955496965557, lng: 85.80083587633878, icon: '🛡️', tag: 'Admin', ref: 'Dean SOA Office' },
-  { name: "'B' Block (Administrative Block)", lat: 20.249250, lng: 85.800650, icon: '🏢', tag: 'Admin', ref: 'B-Block Admin' },
   { name: 'Administration Block Road', lat: 20.249466508087377, lng: 85.80092655983732, icon: '🛣️', tag: 'Infrastructure', ref: 'Admin Road' },
-  { name: 'ITER Main Campus Gate', lat: 20.249850, lng: 85.800150, icon: '⛩️', tag: 'Infrastructure', ref: 'Main Entrance' },
-  { name: 'Patra Electrical & ATM Area', lat: 20.249700, lng: 85.800400, icon: '⚡', tag: 'Services', ref: 'Main Gate Market' },
   { name: 'Indoor Basketball Court 🏀', lat: 20.248625932896225, lng: 85.80156712816182, icon: '🏀', tag: 'Sports', ref: 'Basketball Court' },
   { name: 'Sports Complex', lat: 20.248480561798747, lng: 85.80126137514563, icon: '⚽', tag: 'Sports', ref: 'Sports Complex' },
   { name: "'E' Block", lat: 20.247914359544147, lng: 85.80095853652745, icon: '🏢', tag: 'Academic', ref: 'E-Block Academic' },
@@ -313,10 +307,11 @@ const ITER_CAMPUS_LOCATIONS = [
   { name: 'ITER, SOA Campus Center', lat: 20.25011323243892, lng: 85.80027994895656, icon: '📍', tag: 'Campus Hub', ref: 'Campus Center' },
 ];
 
-function getGoogleMapsUrl(lat, lng, label) {
+function getGoogleMapsUrl(lat, lng) {
   return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 }
 
+// ── Theme management ──────────────────────────────────────
 // ── Theme management ──────────────────────────────────────
 function _applyTheme(theme) {
   const isLight = theme === 'light';
@@ -341,7 +336,6 @@ function toggleTheme() {
   const current = document.body.classList.contains('light-mode') ? 'light' : 'dark';
   const next = current === 'dark' ? 'light' : 'dark';
   _applyTheme(next);
-  // If a Leaflet map is active, re-render the current page so tiles update
   const hash = (window.location.hash || '').replace('#', '');
   if (hash === 'feed' || hash === 'submit') {
     setTimeout(() => navigate(hash), 0);
