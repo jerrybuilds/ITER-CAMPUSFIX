@@ -1,9 +1,9 @@
-// ── Seed data initializer ──────────────────────────────────
+// ── Seed data initializer (ITER, SOA Campus-1) ──────────────
 function initSeedData() {
   const isSeeded = localStorage.getItem('campusfix_seeded');
   const storedUsers = DB.get('users');
   const storedReports = DB.get('reports');
-  // If seeded but missing rich profile schema, unique_id or still using legacy Delhi coordinates, refresh seed
+  // If seeded but missing rich profile schema, unique_id or still using legacy coordinates, refresh seed
   if (isSeeded && storedUsers && storedUsers.length >= 9 && storedUsers[0].phone && storedReports && storedReports[0]?.location?.lat < 25) return;
 
   const now = Date.now();
@@ -12,34 +12,34 @@ function initSeedData() {
   // --- Users ---
   const users = [
     {
-      id: 'u1', email: 'arjun.k@greenfield.edu', name: 'Arjun Kumar', role: 'reporter', avatar: '🧑‍💻',
+      id: 'u1', email: 'arjun.k@soa.in', name: 'Arjun Kumar', role: 'reporter', avatar: '🧑‍💻',
       phone: '+91 98765 43210', id_number: 'GU-2023-CS-0842',
       designation: 'B.Tech Computer Science (3rd Year)', location: 'Hostel A — Room 314',
-      bio: 'Passionate about improving campus facilities, smart infrastructure, and student living conditions.',
+      bio: 'Passionate about improving campus facilities, smart infrastructure, and student living conditions at ITER, SOA Campus-1.',
       joined_date: 'August 2023', reputation_points: 540,
       badges: ['first_responder', 'eagle_eye', 'civic_pioneer', 'eco_guardian', 'community_pillar'],
       preferences: { notify_email: true, notify_sms: true, default_anon: false, lang: 'en', auto_cluster_alerts: true }
     },
     {
-      id: 'u2', email: 'priya.s@greenfield.edu', name: 'Priya Singh', role: 'reporter', avatar: '👩‍🎓',
+      id: 'u2', email: 'priya.s@soa.in', name: 'Priya Singh', role: 'reporter', avatar: '👩‍🎓',
       phone: '+91 98765 43211', id_number: 'GU-2024-EC-0119',
       designation: 'B.Tech Electronics & Comm. (2nd Year)', location: 'Hostel B — Room 208',
-      bio: 'Advocate for sustainable, clean, and accessible campus spaces for all students.',
+      bio: 'Advocate for sustainable, clean, and accessible campus spaces for all students at ITER, SOA Campus-1.',
       joined_date: 'July 2024', reputation_points: 380,
       badges: ['first_responder', 'eco_guardian', 'civic_pioneer'],
       preferences: { notify_email: true, notify_sms: false, default_anon: false, lang: 'en', auto_cluster_alerts: true }
     },
     {
-      id: 'u3', email: 'ravi.m@greenfield.edu', name: 'Ravi Mehta', role: 'reporter', avatar: '🧑‍🎓',
+      id: 'u3', email: 'ravi.m@soa.in', name: 'Ravi Mehta', role: 'reporter', avatar: '🧑‍🎓',
       phone: '+91 98765 43212', id_number: 'GU-2022-ME-0451',
       designation: 'B.Tech Mechanical Engineering (4th Year)', location: 'Hostel C — Room 102',
-      bio: 'Student council representative focusing on library facilities, sports complex, and dining hygiene.',
+      bio: 'Student council representative focusing on library facilities, sports complex, and dining hygiene at ITER.',
       joined_date: 'August 2022', reputation_points: 620,
       badges: ['first_responder', 'civic_pioneer', 'community_pillar', 'eagle_eye'],
       preferences: { notify_email: true, notify_sms: true, default_anon: true, lang: 'hi', auto_cluster_alerts: true }
     },
     {
-      id: 'u4', email: 'neha.t@greenfield.edu', name: 'Neha Tiwari', role: 'reporter', avatar: '👩‍💻',
+      id: 'u4', email: 'neha.t@soa.in', name: 'Neha Tiwari', role: 'reporter', avatar: '👩‍💻',
       phone: '+91 98765 43213', id_number: 'GU-2023-BT-0932',
       designation: 'M.Tech Biotechnology (1st Year)', location: 'PG Hostel — Block D',
       bio: 'Laboratory research scholar; monitoring lab maintenance, safety equipment, and bio-waste management.',
@@ -48,10 +48,10 @@ function initSeedData() {
       preferences: { notify_email: true, notify_sms: true, default_anon: false, lang: 'en', auto_cluster_alerts: false }
     },
     {
-      id: 'u5', email: 'john.d@greenfield.edu', unique_id: 'FAC-8821', name: 'John D\'souza', role: 'resolver', dept: 'd1', avatar: '🔧',
+      id: 'u5', email: 'john.d@soa.in', unique_id: 'FAC-8821', name: 'John D\'souza', role: 'resolver', dept: 'd1', avatar: '🔧',
       phone: '+91 98765 11223', id_number: 'GU-STAFF-FM-104',
       designation: 'Senior Facilities Lead & Master Electrician', location: 'Facilities Workshop — Block B',
-      bio: '12+ years maintaining campus electrical grids, backup generators, high-voltage transformers, and plumbing.',
+      bio: '12+ years maintaining ITER campus electrical grids, backup generators, high-voltage transformers, and plumbing.',
       joined_date: 'January 2018', duty_status: 'on_duty', shift_hours: '08:00 AM – 05:00 PM (Shift Alpha)',
       sla_compliance: 97.4, avg_response_hrs: 2.1, resolved_count: 148, active_queue_count: 3, rating: 4.9,
       skills: ['High Voltage Electricals', 'Substation Maintenance', 'Commercial Plumbing', 'HVAC Chillers', 'Fire Suppression'],
@@ -60,10 +60,10 @@ function initSeedData() {
       preferences: { urgent_sms: true, sound_alerts: true, auto_accept_critical: true, lang: 'en' }
     },
     {
-      id: 'u6', email: 'it.team@greenfield.edu', unique_id: 'IT-4402', name: 'IT Support Team', role: 'resolver', dept: 'd2', avatar: '💻',
+      id: 'u6', email: 'it.team@soa.in', unique_id: 'IT-4402', name: 'IT Support Team', role: 'resolver', dept: 'd2', avatar: '💻',
       phone: '+91 98765 44556', id_number: 'GU-STAFF-IT-220',
       designation: 'Campus Network & Systems Operations', location: 'Server Room & NOC — CS Block',
-      bio: 'Managing 120+ access points, 10Gbps fiber backbone, e-library proxies, classroom smart boards, and lab rigs.',
+      bio: 'Managing 120+ access points, 10Gbps fiber backbone, e-library proxies, classroom smart boards, and lab rigs at ITER.',
       joined_date: 'March 2020', duty_status: 'on_duty', shift_hours: '24/7 Rotational Operations',
       sla_compliance: 98.2, avg_response_hrs: 1.4, resolved_count: 312, active_queue_count: 2, rating: 4.85,
       skills: ['Cisco CCNA/CCNP', 'Ubiquiti Fiber APs', 'Smart Projectors', 'RADIUS Auth', 'Subnet Routing', 'DHCP/DNS'],
@@ -72,21 +72,21 @@ function initSeedData() {
       preferences: { urgent_sms: true, sound_alerts: true, auto_accept_critical: true, lang: 'en' }
     },
     {
-      id: 'u7', email: 'admin@greenfield.edu', unique_id: 'ADM-9901', name: 'Dr. Meera Nair', role: 'admin', avatar: '🛡️',
+      id: 'u7', email: 'admin@soa.in', unique_id: 'ADM-9901', name: 'Dr. Meera Nair', role: 'admin', avatar: '🛡️',
       phone: '+91 98765 99887', id_number: 'GU-EXEC-001',
       designation: 'Dean of Campus Infrastructure & Student Affairs', location: 'Administrative Tower — Suite 401',
-      bio: 'Directing university capital works, multi-department SLA standards, participatory budgeting, and campus safety.',
+      bio: 'Directing ITER campus capital works, multi-department SLA standards, participatory budgeting, and campus safety.',
       joined_date: 'July 2015', clearance_level: 'Level 3 — Super Administrator',
       governance_scope: 'All 5 Campus Departments • University Budget • Policy Execution',
-      managed_budget: '₹12,00,000 (Sem I 2025-26)', campus_sla_health: 94.6,
+      managed_budget: '₹12,00,000 (Sem I 2026-27)', campus_sla_health: 94.6,
       admin_stats: { active_resolvers: 8, total_reports_managed: 840, budget_proposals_approved: 12, ai_routing_accuracy: 92.5 },
       preferences: { daily_digest: true, emergency_sms: true, audit_broadcasts: true, lang: 'en' }
     },
     {
-      id: 'u8', email: 'security@greenfield.edu', unique_id: 'SEC-9104', name: 'Campus Security', role: 'resolver', dept: 'd4', avatar: '🔒',
+      id: 'u8', email: 'security@soa.in', unique_id: 'SEC-9104', name: 'Campus Security', role: 'resolver', dept: 'd4', avatar: '🔒',
       phone: '+91 98765 77889', id_number: 'GU-STAFF-SEC-012',
       designation: 'Chief Security Officer & Surveillance Lead', location: 'Main Gate Control Center',
-      bio: 'Overseeing perimeter security, 140+ CCTV surveillance feeds, night patrol units, and emergency response.',
+      bio: 'Overseeing ITER perimeter security, 140+ CCTV surveillance feeds, night patrol units, and emergency response.',
       joined_date: 'November 2019', duty_status: 'on_duty', shift_hours: '24/7 Security Command Desk',
       sla_compliance: 99.1, avg_response_hrs: 0.6, resolved_count: 89, active_queue_count: 1, rating: 4.95,
       skills: ['Surveillance AI Feeds', 'Perimeter Protection', 'Emergency Lockdown', 'Crowd Management', 'Fire Drills'],
@@ -95,10 +95,10 @@ function initSeedData() {
       preferences: { urgent_sms: true, sound_alerts: true, auto_accept_critical: true, lang: 'en' }
     },
     {
-      id: 'u9', email: 'housekeeping@greenfield.edu', unique_id: 'SAN-3319', name: 'Housekeeping & Sanitation', role: 'resolver', dept: 'd3', avatar: '🧹',
+      id: 'u9', email: 'housekeeping@soa.in', unique_id: 'SAN-3319', name: 'Housekeeping & Sanitation', role: 'resolver', dept: 'd3', avatar: '🧹',
       phone: '+91 98765 33445', id_number: 'GU-STAFF-HK-055',
       designation: 'Sanitation Lead & Campus Cleanliness Officer', location: 'Central Housekeeping Hub — Block C',
-      bio: 'Managing 20+ sanitation personnel, waste segregation, periodic deep cleans, and dining hall hygiene.',
+      bio: 'Managing 20+ sanitation personnel, waste segregation, periodic deep cleans, and dining hall hygiene at ITER.',
       joined_date: 'February 2021', duty_status: 'on_duty', shift_hours: '06:00 AM – 03:00 PM (Shift Morning)',
       sla_compliance: 96.2, avg_response_hrs: 1.8, resolved_count: 210, active_queue_count: 2, rating: 4.8,
       skills: ['Waste Segregation', 'Deep Sanitization', 'Pest Control', 'Hazardous Waste Handling', 'Floor Care'],
@@ -237,15 +237,15 @@ function initSeedData() {
   const proposals = [
     {
       id: 'p1', title: 'Campus-wide WiFi Repeater Network',
-      description: 'Install 12 WiFi repeaters across dead-zones identified from 15+ recurring outage reports — Library, Hostel A/B corridors, and the Sports Complex. Will eliminate the single-router bottleneck.',
+      description: 'Install 12 WiFi repeaters across dead-zones identified from 15+ recurring outage reports — Library, Hostel A/B corridors, and the Sports Complex. Will eliminate the single-router bottleneck at ITER.',
       category: 'it', pattern_source: true, pattern_reports: 15,
       budget_ask: 180000, votes: 247, status: 'voting',
       funded: false, created_at: h(240),
-      location: 'Campus-wide',
+      location: 'ITER Campus-wide',
     },
     {
       id: 'p2', title: 'Hostel A Electrical Rewiring',
-      description: 'The existing 1990s wiring in Hostel A causes recurring breaker trips and power cuts. A full rewiring project will make it safe and reliable for 200+ residents.',
+      description: 'The existing 1990s wiring in Hostel A causes recurring breaker trips and power cuts. A full rewiring project will make it safe and reliable for 200+ residents at ITER.',
       category: 'electrical', pattern_source: true, pattern_reports: 8,
       budget_ask: 320000, votes: 189, status: 'approved',
       funded: true, allocated: 320000, spent: 145000, created_at: h(360),
@@ -257,7 +257,7 @@ function initSeedData() {
       category: 'cleanliness', pattern_source: true, pattern_reports: 11,
       budget_ask: 95000, votes: 134, status: 'voting',
       funded: false, created_at: h(180),
-      location: 'Student Canteen',
+      location: 'ITER Student Canteen',
     },
     {
       id: 'p4', title: 'Library Study Room Air Conditioning Upgrade',
@@ -265,7 +265,7 @@ function initSeedData() {
       category: 'electrical', pattern_source: false,
       budget_ask: 240000, votes: 98, status: 'voting',
       funded: false, created_at: h(120),
-      location: 'Library Block',
+      location: 'ITER Library Block',
     },
     {
       id: 'p5', title: 'CCTV Expansion — 20 New Cameras',
@@ -273,7 +273,7 @@ function initSeedData() {
       category: 'safety', pattern_source: false,
       budget_ask: 150000, votes: 176, status: 'completed',
       funded: true, allocated: 150000, spent: 148500, created_at: h(720),
-      location: 'Multiple locations',
+      location: 'ITER Multiple locations',
     },
   ];
 
@@ -282,7 +282,7 @@ function initSeedData() {
 
   // --- Budget Cycles ---
   const budgetCycles = [
-    { id: 'bc1', label: 'Semester I 2025-26', envelope: 1200000, allocated: 470000, spent: 293500, cycle_start: h(8760), cycle_end: h(-2880) },
+    { id: 'bc1', label: 'Semester I 2026-27', envelope: 1200000, allocated: 470000, spent: 293500, cycle_start: h(8760), cycle_end: h(-2880) },
   ];
 
   // --- Audit Log ---
