@@ -1,11 +1,10 @@
 /* =========================================================  
-   CampusFix — App Entry Point
-   Initializes and renders all pages.
+   CampusFix — App Entry Point (ITER, SOA Campus-1)
    ========================================================= */
 
 window.addEventListener('DOMContentLoaded', () => {
-  initTheme();   // apply saved theme + bind toggle button
-  _initRouter(); // then render the page
+  initTheme();
+  _initRouter();
 });
 
 
@@ -24,9 +23,9 @@ function renderLanding(root) {
   <div class="container">
     <div class="hero-grid">
       <div class="hero-content">
-        <div class="hero-eyebrow">🏫 Greenfield University Platform</div>
-        <h1 class="hero-title">Fix Campus Issues.<br><span class="highlight">Together.</span></h1>
-        <p class="hero-subtitle">Report facility problems via text, voice, or photo. We deduplicate, route, and track every case to resolution — publicly and transparently.</p>
+        <div class="hero-eyebrow">🏫 ITER · SOA Campus-1 · Official Issue Platform</div>
+        <h1 class="hero-title">Fix ITER Campus Issues.<br><span class="highlight">Together.</span></h1>
+        <p class="hero-subtitle">Official issue reporting for ITER, SOA Campus-1. Report facility problems via text, voice, or photo. We deduplicate, route, and track every case to resolution — publicly and transparently.</p>
         <div class="hero-actions">
           <button class="btn btn-primary btn-lg" data-page="submit">📋 Report an Issue</button>
           <button class="btn btn-ghost btn-lg" data-page="feed">🗺️ View Public Feed</button>
@@ -194,7 +193,7 @@ function renderLanding(root) {
     <div class="cta-box">
       <div class="section-tag" style="margin:0 auto var(--space-5)">Get Started</div>
       <h2 class="section-title">Ready to fix campus together?</h2>
-      <p style="color:var(--text-secondary);margin:var(--space-5) auto var(--space-8);max-width:480px;">Sign in with your @greenfield.edu email to report your first issue in under 60 seconds.</p>
+      <p style="color:var(--text-secondary);margin:var(--space-5) auto var(--space-8);max-width:480px;">Sign in with your <strong style="color:var(--color-primary-light)">@soa.in</strong> email to report your first issue in under 60 seconds.</p>
       <div style="display:flex;gap:var(--space-4);justify-content:center;flex-wrap:wrap;">
         <button class="btn btn-primary btn-lg" data-page="auth">Get Started — It's Free</button>
         <button class="btn btn-ghost btn-lg" data-page="feed">Browse Public Feed</button>
@@ -206,21 +205,20 @@ function renderLanding(root) {
 <!-- FOOTER -->
 <footer class="footer">
   <div class="container">
-    <p>🏫 CampusFix — Greenfield University | Built with transparency in mind | <span style="color:var(--color-primary-light)">report.greenfield.edu</span></p>
+    <p>🏫 CampusFix — ITER, Siksha 'O' Anusandhan Campus-1 | Built with transparency in mind | <span style="color:var(--color-primary-light)">campusfix.iter.ac.in</span></p>
   </div>
 </footer>
   `;
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PAGE 2 — MULTI-PORTAL AUTHENTICATION (STUDENT, SOLVER, ADMIN)
+   PAGE 2 — MULTI-PORTAL AUTHENTICATION
    ═══════════════════════════════════════════════════════════ */
 function renderAuth(root, { redirect } = {}) {
-  let activePortal = 'student'; // 'student' | 'solver' | 'admin'
-  let studentMode = 'login';   // 'login' | 'register'
-  let authStep = 'input';      // 'input' | 'otp'
+  let activePortal = 'student';
+  let studentMode = 'login';
+  let authStep = 'input';
 
-  // Dynamic session state
   let authSession = {
     targetUser: null,
     pendingStudentData: null,
@@ -243,9 +241,7 @@ function renderAuth(root, { redirect } = {}) {
       role: targetUser.role,
       portal: activePortal
     });
-    
     showToast('success', `Welcome, ${targetUser.name.split(' ')[0]}! 👋`, `Signed in as ${targetUser.role.toUpperCase()}`);
-    
     if (redirect) {
       navigate(redirect);
       return;
@@ -263,24 +259,22 @@ function renderAuth(root, { redirect } = {}) {
     root.innerHTML = `
 <div class="auth-page auth-portal-${activePortal}">
   <div class="auth-box ${activePortal === 'student' && studentMode === 'register' ? 'auth-box-wide' : ''}">
-    
-    <!-- Portal Header & Tabs -->
     <div class="auth-portal-header">
       <div class="auth-logo">
         ${isStudent ? '🎓' : isSolver ? '🔧' : '🛡️'}
       </div>
       <h1 class="auth-title">
-        ${isStudent ? 'Student & Reporter Portal' : isSolver ? 'Department Solver Access' : 'Executive Administration'}
+        ${isStudent ? 'ITER Student Portal' : isSolver ? 'ITER Dept. Solver Access' : 'ITER Executive Administration'}
       </h1>
-      <p class="auth-sub">
+      <p style="font-size:11px;color:var(--text-muted);margin-top:4px;letter-spacing:1px;font-weight:600;text-transform:uppercase;">SIKSHA 'O' ANUSANDHAN · CAMPUS-1</p>
+      <p class="auth-sub" style="margin-top:10px;">
         ${isStudent 
-          ? 'Sign in or register your full student profile with your college email' 
+          ? 'Sign in or register your full student profile with your @soa.in email' 
           : isSolver 
             ? 'Authorized solvers must authenticate via their assigned Unique Solver ID' 
             : 'Restricted Level-3 Dean & Administrator clearance portal'}
       </p>
 
-      <!-- 3-Way Portal Selector -->
       <div class="portal-nav-tabs">
         <button class="portal-tab ${isStudent ? 'active' : ''}" data-set-portal="student">
           <span>🎓</span> <span>Student</span>
@@ -295,7 +289,6 @@ function renderAuth(root, { redirect } = {}) {
     </div>
 
     ${authStep === 'input' ? `
-      <!-- ══════════ PORTAL 1: STUDENT ══════════ -->
       ${isStudent ? `
         <div class="student-mode-toggle">
           <button class="student-mode-btn ${studentMode === 'login' ? 'active' : ''}" data-student-mode="login">
@@ -307,42 +300,40 @@ function renderAuth(root, { redirect } = {}) {
         </div>
 
         ${studentMode === 'login' ? `
-          <!-- Student Login Form -->
           <form id="form-student-login" class="auth-form">
             <div class="form-group">
               <label class="form-label" for="stud-login-email">College Email Address</label>
-              <input class="form-input" type="email" id="stud-login-email" placeholder="e.g. arjun.k@greenfield.edu" required autocomplete="email"/>
+              <input class="form-input" type="email" id="stud-login-email" placeholder="e.g. abc@soa.in" required autocomplete="email"/>
             </div>
             <div class="auth-hint-box">
               <span>🔐</span>
-              <span>Accepts registered <strong>@greenfield.edu</strong> student accounts. A random 6-digit OTP will be generated.</span>
+              <span>Accepts registered <strong>@soa.in</strong> student accounts. A random 6-digit OTP will be generated.</span>
             </div>
             <button type="submit" class="btn btn-primary w-full mt-4" style="height:48px;">
               Generate Random OTP & Sign In →
             </button>
           </form>
         ` : `
-          <!-- Student Full Details Registration Form -->
           <form id="form-student-register" class="auth-form student-reg-grid">
             <div class="reg-col-2">
               <div class="form-group">
                 <label class="form-label" for="reg-name">Full Name *</label>
-                <input class="form-input" type="text" id="reg-name" placeholder="e.g. Ananya Sharma" required/>
+                <input class="form-input" type="text" id="reg-name" placeholder="e.g. Riya Sharma" required/>
               </div>
               <div class="form-group">
                 <label class="form-label" for="reg-email">College Email Address *</label>
-                <input class="form-input" type="email" id="reg-email" placeholder="ananya.s@greenfield.edu" required/>
+                <input class="form-input" type="email" id="reg-email" placeholder="riya@soa.in" required/>
               </div>
             </div>
 
             <div class="reg-col-2">
               <div class="form-group">
                 <label class="form-label" for="reg-roll">Student Roll / ID No. *</label>
-                <input class="form-input" type="text" id="reg-roll" placeholder="GU-2024-CS-0412" required/>
+                <input class="form-input" type="text" id="reg-roll" placeholder="24E113C88" required/>
               </div>
               <div class="form-group">
                 <label class="form-label" for="reg-phone">Phone Number *</label>
-                <input class="form-input" type="tel" id="reg-phone" placeholder="+91 98765 12345" required/>
+                <input class="form-input" type="tel" id="reg-phone" placeholder="+91 98765 43210" required/>
               </div>
             </div>
 
@@ -389,7 +380,6 @@ function renderAuth(root, { redirect } = {}) {
               </div>
             </div>
 
-            <!-- Avatar Selection -->
             <div class="form-group">
               <label class="form-label">Choose Student Avatar</label>
               <div class="avatar-selection-row" id="reg-avatar-choices">
@@ -411,7 +401,6 @@ function renderAuth(root, { redirect } = {}) {
         `}
       ` : ''}
 
-      <!-- ══════════ PORTAL 2: SOLVER (UNIQUE ID) ══════════ -->
       ${isSolver ? `
         <form id="form-solver-login" class="auth-form">
           <div class="form-group">
@@ -440,12 +429,11 @@ function renderAuth(root, { redirect } = {}) {
         </form>
       ` : ''}
 
-      <!-- ══════════ PORTAL 3: ADMIN (UNIQUE ID) ══════════ -->
       ${isAdmin ? `
         <form id="form-admin-login" class="auth-form">
           <div class="form-group">
             <label class="form-label" for="admin-unique-id">Unique Admin Security ID or Executive Email *</label>
-            <input class="form-input" type="text" id="admin-unique-id" placeholder="e.g. ADM-9901 or admin@greenfield.edu" required autofocus/>
+            <input class="form-input" type="text" id="admin-unique-id" placeholder="e.g. ADM-9901 or admin@soa.in" required autofocus/>
           </div>
 
           <div class="auth-hint-box" style="background:hsla(38,95%,58%,.08);border-color:hsla(38,95%,58%,.25);">
@@ -466,7 +454,6 @@ function renderAuth(root, { redirect } = {}) {
         </form>
       ` : ''}
     ` : `
-      <!-- ══════════ STEP 2: RANDOM OTP VERIFICATION ══════════ -->
       <div class="auth-otp-screen">
         <div class="otp-security-banner">
           <div class="otp-banner-icon">🎲</div>
@@ -518,13 +505,10 @@ function renderAuth(root, { redirect } = {}) {
     if (authSession.timerInterval) clearInterval(authSession.timerInterval);
     let secondsLeft = 60;
     authSession.expiresAt = Date.now() + 60000;
-    
     authSession.timerInterval = setInterval(() => {
       secondsLeft--;
       const timerEl = document.getElementById('otp-timer-val');
-      if (timerEl) {
-        timerEl.textContent = `${secondsLeft}s`;
-      }
+      if (timerEl) timerEl.textContent = `${secondsLeft}s`;
       if (secondsLeft <= 0) {
         clearInterval(authSession.timerInterval);
         if (timerEl) timerEl.textContent = 'Expired';
@@ -540,18 +524,15 @@ function renderAuth(root, { redirect } = {}) {
     authSession.pendingStudentData = pendingData;
     authSession.portal = activePortal;
     authStep = 'otp';
-
     showToast('success', '🔐 Random OTP Dispatched!', `Generated Code: ${randomOtp} (Valid for 60s)`);
     render();
     startOtpCountdown();
-
     setTimeout(() => {
       document.getElementById('otp-0')?.focus();
     }, 100);
   }
 
   function bindEvents() {
-    // Portal Switcher Tabs
     root.querySelectorAll('[data-set-portal]').forEach(btn => {
       btn.addEventListener('click', () => {
         activePortal = btn.dataset.setPortal;
@@ -560,7 +541,6 @@ function renderAuth(root, { redirect } = {}) {
       });
     });
 
-    // Student Mode Switcher
     root.querySelectorAll('[data-student-mode]').forEach(btn => {
       btn.addEventListener('click', () => {
         studentMode = btn.dataset.studentMode;
@@ -568,7 +548,6 @@ function renderAuth(root, { redirect } = {}) {
       });
     });
 
-    // Solver ID chip fill helper
     root.querySelectorAll('[data-fill-solver]').forEach(chip => {
       chip.addEventListener('click', () => {
         const inp = document.getElementById('solver-unique-id');
@@ -576,7 +555,6 @@ function renderAuth(root, { redirect } = {}) {
       });
     });
 
-    // Admin ID chip fill helper
     root.querySelectorAll('[data-fill-admin]').forEach(chip => {
       chip.addEventListener('click', () => {
         const inp = document.getElementById('admin-unique-id');
@@ -584,7 +562,6 @@ function renderAuth(root, { redirect } = {}) {
       });
     });
 
-    // Avatar picker in registration
     let chosenEmoji = '🧑‍💻';
     root.querySelectorAll('.avatar-opt-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -594,27 +571,22 @@ function renderAuth(root, { redirect } = {}) {
       });
     });
 
-    // Student Sign In Form Submit
     document.getElementById('form-student-login')?.addEventListener('submit', (e) => {
       e.preventDefault();
       const email = document.getElementById('stud-login-email').value.trim().toLowerCase();
-      if (!email.endsWith('@greenfield.edu')) {
-        showToast('error', 'Invalid Domain', 'Please use your institutional @greenfield.edu address.');
+      if (!email.endsWith('@soa.in')) {
+        showToast('error', 'Invalid Domain', 'Please use your institutional @soa.in address.');
         return;
       }
-
       const users = DB.get('users') || [];
       const user = users.find(u => u.email.toLowerCase() === email && u.role === 'reporter');
-
       if (!user) {
         showToast('warning', 'Student Account Not Found', 'No student found with this email. Please click "New Student Registration".');
         return;
       }
-
       triggerOtpStep(user.email, user);
     });
 
-    // Student Registration Form Submit
     document.getElementById('form-student-register')?.addEventListener('submit', (e) => {
       e.preventDefault();
       const name = document.getElementById('reg-name').value.trim();
@@ -627,11 +599,10 @@ function renderAuth(root, { redirect } = {}) {
       const room = document.getElementById('reg-room').value.trim();
       const bio = document.getElementById('reg-bio').value.trim();
 
-      if (!email.endsWith('@greenfield.edu')) {
-        showToast('error', 'Invalid Domain', 'Email must end with @greenfield.edu');
+      if (!email.endsWith('@soa.in')) {
+        showToast('error', 'Invalid Domain', 'Email must end with @soa.in');
         return;
       }
-
       const users = DB.get('users') || [];
       const existing = users.find(u => u.email.toLowerCase() === email);
       if (existing) {
@@ -643,13 +614,9 @@ function renderAuth(root, { redirect } = {}) {
       const designation = `${branch} (${year})`;
 
       const pendingData = {
-        name,
-        email,
-        id_number: roll,
-        phone,
-        designation,
+        name, email, id_number: roll, phone, designation,
         location: fullLocation,
-        bio: bio || `Student of ${branch} at Greenfield University.`,
+        bio: bio || `Student of ${branch} at ITER, SOA Campus-1.`,
         avatar: chosenEmoji,
         role: 'reporter',
         joined_date: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
@@ -657,16 +624,13 @@ function renderAuth(root, { redirect } = {}) {
         badges: ['first_responder'],
         preferences: { notify_email: true, notify_sms: true, default_anon: false, lang: 'en', auto_cluster_alerts: true }
       };
-
       triggerOtpStep(email, null, pendingData);
     });
 
-    // Solver Login Form Submit
     document.getElementById('form-solver-login')?.addEventListener('submit', (e) => {
       e.preventDefault();
       const rawInput = document.getElementById('solver-unique-id').value.trim();
       const cleanInput = rawInput.toLowerCase();
-
       const users = DB.get('users') || [];
       const solverUser = users.find(u => 
         u.role === 'resolver' && (
@@ -675,21 +639,17 @@ function renderAuth(root, { redirect } = {}) {
           (u.id_number && u.id_number.toLowerCase() === cleanInput)
         )
       );
-
       if (!solverUser) {
         showToast('error', 'Invalid Solver ID', 'No solver account found matching this Unique ID or staff email.');
         return;
       }
-
       triggerOtpStep(solverUser.unique_id ? `${solverUser.name} (${solverUser.unique_id})` : solverUser.email, solverUser);
     });
 
-    // Admin Login Form Submit
     document.getElementById('form-admin-login')?.addEventListener('submit', (e) => {
       e.preventDefault();
       const rawInput = document.getElementById('admin-unique-id').value.trim();
       const cleanInput = rawInput.toLowerCase();
-
       const users = DB.get('users') || [];
       const adminUser = users.find(u => 
         u.role === 'admin' && (
@@ -698,16 +658,13 @@ function renderAuth(root, { redirect } = {}) {
           (u.id_number && u.id_number.toLowerCase() === cleanInput)
         )
       );
-
       if (!adminUser) {
         showToast('error', 'Clearance Denied', 'Invalid Administrator Unique ID or executive credential.');
         return;
       }
-
       triggerOtpStep(`${adminUser.name} (${adminUser.unique_id || 'ADMIN'})`, adminUser);
     });
 
-    // OTP auto-focus and backspace
     const otpInputs = root.querySelectorAll('.otp-input');
     otpInputs.forEach((inp, idx) => {
       inp.addEventListener('input', () => {
@@ -718,7 +675,6 @@ function renderAuth(root, { redirect } = {}) {
       });
     });
 
-    // Auto-fill OTP button
     document.getElementById('btn-copy-fill-otp')?.addEventListener('click', () => {
       const code = authSession.generatedOtp;
       if (code && code.length === 6) {
@@ -730,7 +686,6 @@ function renderAuth(root, { redirect } = {}) {
       }
     });
 
-    // Resend new random OTP
     document.getElementById('btn-resend-otp')?.addEventListener('click', () => {
       const newOtp = generateRandomOtp();
       authSession.generatedOtp = newOtp;
@@ -740,33 +695,24 @@ function renderAuth(root, { redirect } = {}) {
       startOtpCountdown();
     });
 
-    // Back to input
     document.getElementById('btn-back-to-input')?.addEventListener('click', () => {
       if (authSession.timerInterval) clearInterval(authSession.timerInterval);
       authStep = 'input';
       render();
     });
 
-    // Confirm & Verify OTP
     document.getElementById('btn-verify-otp')?.addEventListener('click', () => {
       const enteredOtp = [0,1,2,3,4,5].map(i => document.getElementById(`otp-${i}`)?.value || '').join('');
-      
       if (enteredOtp.length < 6) {
         showToast('error', 'Incomplete Code', 'Please enter all 6 digits of the OTP.');
         return;
       }
-
       if (enteredOtp !== authSession.generatedOtp) {
         showToast('error', 'Invalid OTP', 'The verification code you entered is incorrect. Please check the generated code.');
         return;
       }
-
-      // Check if this was a new student registration
       if (authSession.pendingStudentData) {
-        const newStudent = {
-          ...authSession.pendingStudentData,
-          id: 'u_' + Date.now()
-        };
+        const newStudent = { ...authSession.pendingStudentData, id: 'u_' + Date.now() };
         DB.push('users', newStudent);
         showToast('success', 'Registration Successful! 🎉', 'Your complete student profile has been created.');
         doLoginUser(newStudent);
@@ -804,32 +750,7 @@ function renderSubmit(root) {
 
   const BUILDINGS = typeof ITER_CAMPUS_LOCATIONS !== 'undefined' 
     ? ITER_CAMPUS_LOCATIONS.map(l => l.name)
-    : [
-        'ITER Central Library',
-        'Library Parking area',
-        'Institute of Technical Education & Research',
-        'SOA University Examination Cell',
-        'Bank of India ATM',
-        'F-Block Road',
-        'ECO GYM, ITER',
-        "Food Court, ITER, SIKSHA 'O' Anusandhan",
-        "'F' Block",
-        'SOA University - Physics Department',
-        'E Block Lawn',
-        "ITER, Boy's Hostel 6 (BH-6)",
-        'ITER GIRLS HOSTEL GATE',
-        'ITER BH-05',
-        'BH-10',
-        'Lh 1 Girls Hostel (ITER Campus)',
-        'SOA Auditorium',
-        "Office of Dean - Siksha 'O' Anusandhan University",
-        'Administration Block Road',
-        'Indoor Basketball Court 🏀',
-        'Sports Complex',
-        "'E' Block",
-        'Centre for Data Science',
-        'ITER, SOA Campus Center'
-      ];
+    : [];
 
   function renderWizard() {
     root.innerHTML = `
@@ -838,7 +759,6 @@ function renderSubmit(root) {
     <h1>📋 Report an Issue</h1>
     <p style="color:var(--text-secondary);margin-top:8px;font-size:14px;">Help us fix it fast — takes under 2 minutes</p>
   </div>
-  <!-- Progress dots -->
   <div class="step-dots">
     <div class="step-dot ${wizardStep > 1 ? 'done' : wizardStep === 1 ? 'active' : ''}" id="wd1">1</div>
     <div class="step-line ${wizardStep > 1 ? 'done' : ''}"></div>
@@ -892,9 +812,8 @@ function renderSubmit(root) {
     return `
 <div id="wizard-step-2">
   <h2 style="font-family:var(--font-display);font-weight:700;margin-bottom:var(--space-6);">Step 2: Where is the issue?</h2>
-  <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px;">📍 Click the map or select from official ITER, SOA building references below.</p>
+  <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px;">📍 Click the map or select from official ITER campus building references below.</p>
   
-  <!-- Campus Reference Quick Filter Pills -->
   <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:10px;" class="hide-scrollbar">
     <button type="button" class="btn btn-xs btn-ghost campus-ref-filter active" data-ref-tag="all">All References</button>
     <button type="button" class="btn btn-xs btn-ghost campus-ref-filter" data-ref-tag="Academic">📚 Academic</button>
@@ -965,7 +884,6 @@ function renderSubmit(root) {
     </div>
   </div>
 
-  <!-- Summary card -->
   <div class="card mb-6">
     <div class="form-label mb-2">📋 Summary</div>
     <div style="font-size:14px;display:flex;flex-direction:column;gap:6px;">
@@ -974,7 +892,6 @@ function renderSubmit(root) {
       <div style="color:var(--text-secondary);">Location: <strong style="color:var(--text-primary)">${formData.location?.label || '—'}</strong></div>
       <div style="color:var(--text-secondary);">Language: <strong style="color:var(--text-primary)">${LANG_LABELS[formData.language] || 'English'}</strong></div>
     </div>
-    <!-- Routing preview -->
     <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border-subtle);">
       <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">🤖 ROUTING PREVIEW</div>
       ${(() => {
@@ -997,7 +914,6 @@ function renderSubmit(root) {
   }
 
   function bindWizardEvents() {
-    // ── STEP 1 ──
     if (wizardStep === 1) {
       root.querySelectorAll('[data-cat]').forEach(el => {
         el.addEventListener('click', () => {
@@ -1016,20 +932,17 @@ function renderSubmit(root) {
         formData.title = titleInp.value;
         checkStep1Valid();
         checkDuplicates();
-        // Auto-suggest category from title
-        if (!formData.category || true) {
-          const res = classifyCategory(titleInp.value + ' ' + descInp.value);
-          const box = document.getElementById('cat-suggestion');
-          if (res.category !== 'other') {
-            box.innerHTML = `<div style="font-size:12px;color:var(--text-muted);">🤖 AI suggests: ${catBadge(res.category)} ${confidenceChip(res.confidence)}</div>`;
-            if (!formData.category) {
-              formData.category = res.category;
-              root.querySelectorAll('[data-cat]').forEach(x => {
-                x.classList.toggle('selected', x.dataset.cat === res.category);
-              });
-            }
-          } else { box.innerHTML = ''; }
-        }
+        const res = classifyCategory(titleInp.value + ' ' + descInp.value);
+        const box = document.getElementById('cat-suggestion');
+        if (res.category !== 'other') {
+          box.innerHTML = `<div style="font-size:12px;color:var(--text-muted);">🤖 AI suggests: ${catBadge(res.category)} ${confidenceChip(res.confidence)}</div>`;
+          if (!formData.category) {
+            formData.category = res.category;
+            root.querySelectorAll('[data-cat]').forEach(x => {
+              x.classList.toggle('selected', x.dataset.cat === res.category);
+            });
+          }
+        } else { box.innerHTML = ''; }
       });
 
       descInp.addEventListener('input', () => {
@@ -1075,14 +988,12 @@ function renderSubmit(root) {
       }
     }
 
-    // ── STEP 2 ──
     if (wizardStep === 2) {
       document.getElementById('step2-back').addEventListener('click', () => { wizardStep = 1; renderWizard(); });
 
       const bldSel = document.getElementById('rep-building');
       const roomInp = document.getElementById('rep-room');
 
-      // Reference category filter pills
       root.querySelectorAll('.campus-ref-filter').forEach(btn => {
         btn.addEventListener('click', () => {
           root.querySelectorAll('.campus-ref-filter').forEach(b => b.classList.remove('active'));
@@ -1118,7 +1029,6 @@ function renderSubmit(root) {
       });
     }
 
-    // ── STEP 3 ──
     if (wizardStep === 3) {
       document.getElementById('step3-back').addEventListener('click', () => { wizardStep = 2; renderWizard(); setTimeout(initLocationMap, 100); });
 
@@ -1163,23 +1073,51 @@ function renderSubmit(root) {
     locationMap = L.map(wrap, { center: CAMPUS_CENTER, zoom: CAMPUS_ZOOM });
     darkTileLayer().addTo(locationMap);
 
-    // Render interactive ITER Campus Landmark Pins
     if (typeof ITER_CAMPUS_LOCATIONS !== 'undefined') {
       ITER_CAMPUS_LOCATIONS.forEach(loc => {
         const landmarkIcon = L.divIcon({
           className: 'campus-landmark-pin',
-          html: `<div style="background:var(--bg-card);border:1px solid var(--border-mid);border-radius:12px;padding:3px 8px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:4px;box-shadow:var(--shadow-sm);white-space:nowrap;cursor:pointer;color:var(--text-primary);"><span style="font-size:12px;">${loc.icon}</span><span style="max-width:130px;overflow:hidden;text-overflow:ellipsis;">${loc.name}</span></div>`,
-          iconSize: [140, 24],
-          iconAnchor: [70, 12]
+          html: `
+            <div style="
+              background: var(--bg-card, #1e1e2e);
+              border: 1.5px solid var(--color-primary, #6b5ce7);
+              border-radius: 8px;
+              padding: 4px 10px;
+              font-size: 12px;
+              font-weight: 700;
+              color: var(--text-primary, #fff);
+              box-shadow: 0 2px 8px rgba(0,0,0,.5);
+              white-space: nowrap;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              gap: 5px;
+              font-family: 'Inter', sans-serif;
+            ">
+              <span style="font-size:14px;">${loc.icon}</span>
+              <span>${loc.name}</span>
+            </div>`,
+          iconSize: [160, 26],
+          iconAnchor: [80, 13],
         });
-        const lm = L.marker([loc.lat, loc.lng], { icon: landmarkIcon }).addTo(locationMap);
-        lm.bindTooltip(`📍 ${loc.name} (${loc.ref || loc.tag})`, { direction: 'top', offset: [0, -10] });
+
+        const lm = L.marker([loc.lat, loc.lng], {
+          icon: landmarkIcon,
+          interactive: true,
+          zIndexOffset: 500,
+        }).addTo(locationMap);
+
         lm.on('click', () => {
           const bldSel = document.getElementById('rep-building');
           if (bldSel) {
             bldSel.value = loc.name;
             const r = document.getElementById('rep-room')?.value || '';
-            formData.location = { label: loc.name + (r ? ', ' + r : ''), lat: loc.lat, lng: loc.lng, room: r };
+            formData.location = {
+              label: loc.name + (r ? ', ' + r : ''),
+              lat: loc.lat,
+              lng: loc.lng,
+              room: r,
+            };
             if (locationMarker) locationMarker.remove();
             locationMarker = L.marker([loc.lat, loc.lng]).addTo(locationMap);
             document.getElementById('step2-next').disabled = false;
@@ -1213,9 +1151,7 @@ function renderSubmit(root) {
     const finalCat = formData.category || category;
     const routing  = routeReport(finalCat, confidence);
     const id = 'r' + uid();
-    const clusterId = null;
 
-    // Find potential cluster
     const allDups = findDuplicates({ ...formData, category: finalCat });
     let assignedCluster = null;
     if (allDups.length > 0 && allDups[0].score > 0.55) {
@@ -1242,10 +1178,8 @@ function renderSubmit(root) {
     };
     DB.push('reports', newReport);
 
-    // Status update
     DB.push('statusUpdates', { id: 'su' + uid(), report_id: id, actor_id: user.id, from: null, to: 'reported', timestamp: Date.now(), note: 'Issue submitted via web portal.', evidence_url: null });
 
-    // Auto-route or flag
     if (routing.needs_review) {
       DB.push('routingQueue', { id: 'rq' + uid(), report_id: id, confidence, suggested_dept: routing.dept_id, suggested_label: routing.dept_name, alt_dept: null, alt_label: null, reason: 'Low classification confidence', title: formData.title, description: formData.description, created_at: Date.now() });
       auditLog('LOW_CONFIDENCE_FLAGGED', 'SYSTEM', 'Report', id, { confidence, flagged_for: 'admin_review' });
@@ -1271,7 +1205,6 @@ function renderSubmit(root) {
 function renderMyReports(root) {
   const user = Auth.current();
   const reports = DB.where('reports', r => r.reporter_id === user?.id);
-  const allReports = DB.get('reports') || [];
 
   let selectedId = null;
 
@@ -1406,8 +1339,7 @@ function renderFeed(root) {
 <div class="feed-page">
   <div class="feed-map-col"><div id="feed-map"></div></div>
   <div class="feed-list-col">
-    <h1 style="font-family:var(--font-display);font-weight:800;font-size:22px;margin-bottom:14px;">🗺️ Live Campus Feed</h1>
-    <!-- Filters -->
+    <h1 style="font-family:var(--font-display);font-weight:800;font-size:22px;margin-bottom:14px;">🗺️ Live ITER Campus Feed</h1>
     <div class="feed-filters">
       <span class="filter-chip ${filterStatus==='all'?'active':''}" data-filter-status="all">All Status</span>
       ${['reported','acknowledged','inprogress','resolved'].map(s =>
@@ -1421,7 +1353,6 @@ function renderFeed(root) {
       ).join('')}
     </div>
     <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">${reports.length} issue(s) shown</div>
-    <!-- Report cards -->
     <div id="feed-cards">
       ${reports.length === 0 ? `<div class="empty-state"><div class="empty-state-icon">🗺️</div><h3>No issues match filters</h3></div>` :
         reports.map(r => renderFeedCard(r)).join('')}
@@ -1456,16 +1387,40 @@ function renderFeed(root) {
     feedMap = L.map(mapEl, { center: CAMPUS_CENTER, zoom: CAMPUS_ZOOM });
     darkTileLayer().addTo(feedMap);
 
-    // Add ITER Campus Landmark Markers Layer
     if (typeof ITER_CAMPUS_LOCATIONS !== 'undefined') {
       ITER_CAMPUS_LOCATIONS.forEach(loc => {
         const landmarkIcon = L.divIcon({
           className: 'campus-landmark-pin',
-          html: `<div style="background:var(--bg-card);border:1px solid var(--border-mid);border-radius:12px;padding:2px 7px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:3px;box-shadow:var(--shadow-sm);white-space:nowrap;cursor:pointer;color:var(--text-secondary);opacity:0.9;"><span>${loc.icon}</span><span style="max-width:110px;overflow:hidden;text-overflow:ellipsis;">${loc.name}</span></div>`,
-          iconSize: [130, 22],
-          iconAnchor: [65, 11]
+          html: `
+            <div style="
+              background: var(--bg-card, #1e1e2e);
+              border: 1.5px solid var(--color-primary, #6b5ce7);
+              border-radius: 8px;
+              padding: 3px 8px;
+              font-size: 11px;
+              font-weight: 700;
+              color: var(--text-primary, #fff);
+              box-shadow: 0 2px 8px rgba(0,0,0,.5);
+              white-space: nowrap;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              gap: 4px;
+              font-family: 'Inter', sans-serif;
+            ">
+              <span style="font-size:13px;">${loc.icon}</span>
+              <span>${loc.name}</span>
+            </div>`,
+          iconSize: [150, 24],
+          iconAnchor: [75, 12],
         });
-        const lm = L.marker([loc.lat, loc.lng], { icon: landmarkIcon }).addTo(feedMap);
+
+        const lm = L.marker([loc.lat, loc.lng], {
+          icon: landmarkIcon,
+          interactive: true,
+          zIndexOffset: 500,
+        }).addTo(feedMap);
+
         lm.bindPopup(`
           <div style="font-family:var(--font-sans);min-width:180px;">
             <div style="font-weight:800;font-size:13px;display:flex;align-items:center;gap:4px;"><span>${loc.icon}</span><span>${loc.name}</span></div>
@@ -1541,11 +1496,10 @@ function renderBudget(root) {
 
     root.innerHTML = `
 <div class="container budget-page">
-  <!-- Budget Hero -->
   <div class="budget-hero">
     <div style="position:relative;z-index:1;">
-      <div class="section-tag" style="margin-bottom:12px;">Semester I 2025-26</div>
-      <div class="budget-title">🏛️ Campus Improvement Fund</div>
+      <div class="section-tag" style="margin-bottom:12px;">Semester I 2026-27</div>
+      <div class="budget-title">🏛️ ITER Campus Improvement Fund</div>
       <div class="budget-sub">Community-driven projects funded by recurring issue patterns and student votes</div>
       <div class="budget-envelope">
         <div>
@@ -1572,7 +1526,6 @@ function renderBudget(root) {
     </div>
   </div>
 
-  <!-- Budget donut chart -->
   <div class="grid-2 mb-6" style="align-items:start;">
     <div class="card">
       <div class="form-label mb-4">Budget Breakdown</div>
@@ -1605,14 +1558,12 @@ function renderBudget(root) {
     </div>
   </div>
 
-  <!-- Tabs -->
   <div class="tab-nav">
     <button class="tab-btn ${activeTab==='vote'?'active':''}" data-budget-tab="vote">🗳️ Voting (${votingProps.length})</button>
     <button class="tab-btn ${activeTab==='funded'?'active':''}" data-budget-tab="funded">✅ Funded & Completed (${approvedProps.length})</button>
     ${user?.role === 'admin' ? `<button class="tab-btn ${activeTab==='submit'?'active':''}" data-budget-tab="submit">+ Submit Proposal</button>` : ''}
   </div>
 
-  <!-- Proposals -->
   <div id="proposals-container">
     ${activeTab === 'vote' ? votingProps.map(p => renderProposal(p, userVotes.includes(p.id))).join('') : ''}
     ${activeTab === 'funded' ? approvedProps.map(p => renderProposal(p, userVotes.includes(p.id), true)).join('') : ''}
@@ -1625,7 +1576,6 @@ function renderBudget(root) {
   }
 
   function renderProposal(p, hasVoted, funded = false) {
-    const approvedPct = p.funded ? Math.round((p.allocated || p.budget_ask) / (cycle?.envelope || 1200000) * 100) : 0;
     return `
 <div class="proposal-card" id="prop-${p.id}">
   <div class="proposal-card-top">
@@ -1762,7 +1712,6 @@ function renderBudget(root) {
 function renderDept(root) {
   const user = Auth.current();
   const depts = DB.get('departments') || [];
-  // Admin can see all depts; resolver sees their own
   const myDept = user?.role === 'admin' ? depts[0] : depts.find(d => d.id === user?.dept) || depts[0];
   let currentDeptId = myDept?.id || 'd1';
   let activeTab = 'queue';
@@ -1776,7 +1725,7 @@ function renderDept(root) {
     root.innerHTML = `
 <div class="container dept-page">
   <div class="reports-header">
-    <h1>🏢 Department Dashboard</h1>
+    <h1>🏢 ITER Department Dashboard</h1>
     ${user?.role === 'admin' ? `
       <select class="form-select" id="dept-selector" style="max-width:250px;">
         ${depts.map(d => `<option value="${d.id}" ${d.id === currentDeptId ? 'selected' : ''}>${d.icon} ${d.name}</option>`).join('')}
@@ -1784,7 +1733,6 @@ function renderDept(root) {
   </div>
 
   <div class="dept-layout">
-    <!-- Sidebar -->
     <div class="dept-sidebar">
       <div class="dept-sidebar-name">${dept?.icon || '🏢'} ${dept?.name}</div>
       <div class="dept-stat-row"><span>Open Cases</span><strong style="color:var(--color-primary-light)">${deptReports.length}</strong></div>
@@ -1796,7 +1744,6 @@ function renderDept(root) {
       <div style="font-size:12px;color:var(--text-muted);">Department Head: <strong style="color:var(--text-secondary)">${dept?.head}</strong></div>
     </div>
 
-    <!-- Main area -->
     <div>
       <div class="tab-nav">
         <button class="tab-btn ${activeTab==='queue'?'active':''}" data-dept-tab="queue">Queue (${deptReports.length})</button>
@@ -1823,7 +1770,6 @@ function renderDept(root) {
   }
 
   function renderQueueItem(r, resolved = false) {
-    const sla = getSLAStatus(r);
     const reporter = DB.find('users', r.reporter_id);
     return `
 <div class="queue-item">
@@ -1863,7 +1809,6 @@ function renderDept(root) {
       el.addEventListener('click', () => { activeTab = el.dataset.deptTab; render(); });
     });
 
-    // Acknowledge
     root.querySelectorAll('[data-action-ack]').forEach(el => {
       el.addEventListener('click', async () => {
         const id = el.dataset.actionAck;
@@ -1877,7 +1822,6 @@ function renderDept(root) {
       });
     });
 
-    // Start work
     root.querySelectorAll('[data-action-start]').forEach(el => {
       el.addEventListener('click', async () => {
         const id = el.dataset.actionStart;
@@ -1891,13 +1835,12 @@ function renderDept(root) {
       });
     });
 
-    // Resolve
     root.querySelectorAll('[data-action-resolve]').forEach(el => {
       el.addEventListener('click', async () => {
         const id = el.dataset.actionResolve;
-        const ok = await showConfirm('🏁','Mark as Resolved?','Confirm that this issue has been fully fixed. Attach a resolution note.','Mark Resolved', false);
+        const ok = await showConfirm('🏁','Mark as Resolved?','Confirm that this issue has been fully fixed.','Mark Resolved', false);
         if (!ok) return;
-        const note = prompt('Add a resolution note (optional, will be public):') || `Resolved by ${user.name}.`;
+        const note = `Resolved by ${user.name}.`;
         DB.update('reports', id, { status: 'resolved', updated_at: Date.now() });
         DB.push('statusUpdates', { id: 'su'+uid(), report_id: id, actor_id: user.id, from:'inprogress', to:'resolved', timestamp: Date.now(), note, evidence_url: 'resolution_photo' });
         auditLog('STATUS_CHANGED', user.id, 'Report', id, { from: 'inprogress', to: 'resolved', note });
@@ -1906,7 +1849,6 @@ function renderDept(root) {
       });
     });
 
-    // Re-route
     root.querySelectorAll('[data-action-reroute]').forEach(el => {
       el.addEventListener('click', async () => {
         const id = el.dataset.actionReroute;
@@ -1946,7 +1888,6 @@ function renderAdmin(root) {
       return s.status === 'overdue' && !['resolved','closed'].includes(r.status);
     });
 
-    // Auto-find dup pairs from clusters
     const clusters = DB.get('clusters') || [];
     const dupPairs = clusters.filter(c => c.count >= 2).map(c => ({
       cluster: c,
@@ -1959,7 +1900,7 @@ function renderAdmin(root) {
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
     <div>
       <h1 style="margin-bottom:4px;">🛡️ Admin Panel</h1>
-      <p style="font-size:13px;color:var(--text-muted);">Greenfield University — CampusFix Management Console</p>
+      <p style="font-size:13px;color:var(--text-muted);">ITER, SOA Campus-1 — CampusFix Management Console</p>
     </div>
     <div style="display:flex;gap:8px;">
       ${escalated.length>0?`<span class="badge badge-danger">🚨 ${escalated.length} Escalated</span>`:''}
@@ -1967,7 +1908,6 @@ function renderAdmin(root) {
     </div>
   </div>
 
-  <!-- Quick stats -->
   <div class="grid-4 mb-8">
     ${[
       { label: 'Total Reports', val: reports.length, icon: '📋', color: 'var(--color-primary-light)' },
@@ -1983,7 +1923,6 @@ function renderAdmin(root) {
     `).join('')}
   </div>
 
-  <!-- Tabs -->
   <div class="tab-nav">
     <button class="tab-btn ${activeTab==='routing'?'active':''}" data-admin-tab="routing">⚠️ Routing Queue (${routingQueue.length})</button>
     <button class="tab-btn ${activeTab==='duplicates'?'active':''}" data-admin-tab="duplicates">🔗 Duplicate Review (${dupPairs.length})</button>
@@ -1991,7 +1930,6 @@ function renderAdmin(root) {
     <button class="tab-btn ${activeTab==='audit'?'active':''}" data-admin-tab="audit">📋 Audit Log (${auditLogs.length})</button>
   </div>
 
-  <!-- Routing Queue Tab -->
   ${activeTab === 'routing' ? `
     <div id="routing-tab">
       ${routingQueue.length === 0 ? `<div class="empty-state"><div class="empty-state-icon">✅</div><h3>All reports auto-routed</h3><p>No ambiguous cases require review.</p></div>` :
@@ -2024,7 +1962,6 @@ function renderAdmin(root) {
         `).join('')}
     </div>` : ''}
 
-  <!-- Duplicates Tab -->
   ${activeTab === 'duplicates' ? `
     <div id="dup-tab">
       ${dupPairs.length === 0 ? `<div class="empty-state"><div class="empty-state-icon">🔗</div><h3>No duplicate clusters to review</h3></div>` :
@@ -2060,7 +1997,6 @@ function renderAdmin(root) {
         `).join('')}
     </div>` : ''}
 
-  <!-- Escalations Tab -->
   ${activeTab === 'escalations' ? `
     <div id="esc-tab">
       ${escalated.length === 0 ? `<div class="empty-state"><div class="empty-state-icon">🎉</div><h3>No escalations</h3><p>All cases are within SLA.</p></div>` :
@@ -2086,7 +2022,6 @@ function renderAdmin(root) {
         }).join('')}
     </div>` : ''}
 
-  <!-- Audit Log Tab -->
   ${activeTab === 'audit' ? `
     <div id="audit-tab">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
@@ -2133,7 +2068,6 @@ function renderAdmin(root) {
       el.addEventListener('click', () => { activeTab = el.dataset.adminTab; render(); });
     });
 
-    // Approve routing
     root.querySelectorAll('[data-approve-route]').forEach(el => {
       el.addEventListener('click', async () => {
         const rqId = el.dataset.approveRoute;
@@ -2149,7 +2083,6 @@ function renderAdmin(root) {
       });
     });
 
-    // Manual route
     root.querySelectorAll('[data-manual-route]').forEach(el => {
       el.addEventListener('click', async () => {
         const rqId = el.dataset.manualRoute;
@@ -2167,7 +2100,6 @@ function renderAdmin(root) {
       });
     });
 
-    // Unmerge cluster
     root.querySelectorAll('[data-unmerge]').forEach(el => {
       el.addEventListener('click', async () => {
         const cId = el.dataset.unmerge;
@@ -2184,7 +2116,6 @@ function renderAdmin(root) {
       });
     });
 
-    // Ping dept
     root.querySelectorAll('[data-escalate-ping]').forEach(el => {
       el.addEventListener('click', async () => {
         const id = el.dataset.escalatePing;
@@ -2203,7 +2134,7 @@ function renderAdmin(root) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PAGE 9 — COMPREHENSIVE PROFILE (USER, SOLVER, ADMIN)
+   PAGE 9 — COMPREHENSIVE PROFILE
    ═══════════════════════════════════════════════════════════ */
 function renderProfile(root, params = {}) {
   let currentUser = Auth.current();
@@ -2212,9 +2143,7 @@ function renderProfile(root, params = {}) {
     return;
   }
 
-  // Ensure rich profile fields exist with sensible fallbacks
   currentUser = _ensureUserProfileFields(currentUser);
-
   let activeTab = params.tab || 'overview';
 
   function render() {
@@ -2225,15 +2154,11 @@ function renderProfile(root, params = {}) {
     const isResolver = currentUser.role === 'resolver';
     const isAdmin    = currentUser.role === 'admin';
 
-    const allUsers = DB.get('users') || [];
     const reports  = DB.get('reports') || [];
     const myReports = reports.filter(r => r.reporter_id === currentUser.id);
-    const resolvedMyReports = myReports.filter(r => r.status === 'resolved');
 
     root.innerHTML = `
 <div class="profile-page">
-
-  <!-- ── Hero Profile Card ── -->
   <div class="profile-hero">
     <div class="profile-hero-banner ${isResolver ? 'banner-resolver' : isAdmin ? 'banner-admin' : ''}"></div>
     <div class="profile-hero-body">
@@ -2255,9 +2180,9 @@ function renderProfile(root, params = {}) {
             <span>•</span>
             <span class="profile-info-pill">🆔 ${currentUser.id_number || 'GU-2025-001'}</span>
             <span>•</span>
-            <span class="profile-info-pill">📍 ${currentUser.location || 'Greenfield Campus'}</span>
+            <span class="profile-info-pill">📍 ${currentUser.location || 'ITER Campus'}</span>
           </div>
-          <p class="profile-bio">${currentUser.bio || 'Active member of the Greenfield University CampusFix community.'}</p>
+          <p class="profile-bio">${currentUser.bio || 'Active member of the ITER, SOA Campus-1 CampusFix community.'}</p>
         </div>
       </div>
       <div class="profile-hero-actions">
@@ -2274,7 +2199,6 @@ function renderProfile(root, params = {}) {
     </div>
   </div>
 
-  <!-- ── Navigation Tabs ── -->
   <div class="profile-nav-tabs">
     <button class="profile-tab-btn ${activeTab === 'overview' ? 'active' : ''}" data-ptab="overview">
       <span>📊</span> Overview & Performance
@@ -2308,14 +2232,11 @@ function renderProfile(root, params = {}) {
     </button>
   </div>
 
-  <!-- ── Dynamic Tab Content ── -->
   <div id="profile-tab-content">
     ${renderTabContent(activeTab, currentUser)}
   </div>
-
 </div>
 
-<!-- ── Modal: Edit Profile ── -->
 <div id="edit-profile-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
   <div class="modal-box modal-lg">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-4);">
@@ -2397,17 +2318,14 @@ function renderProfile(root, params = {}) {
     return `<div class="profile-card"><p>Tab content not found.</p></div>`;
   }
 
-  /* ── 1. REPORTER TAB RENDERERS ── */
   function renderReporterOverview(u) {
     const reports = DB.get('reports') || [];
     const myReports = reports.filter(r => r.reporter_id === u.id);
     const resolvedCount = myReports.filter(r => r.status === 'resolved').length;
     const inProgressCount = myReports.filter(r => r.status === 'inprogress').length;
     const resRate = myReports.length ? Math.round((resolvedCount / myReports.length) * 100) : 0;
-    const proposals = DB.get('proposals') || [];
 
     return `
-      <!-- Stats Grid -->
       <div class="profile-stats-grid">
         <div class="pstat-card">
           <div class="pstat-icon icon-blue">📋</div>
@@ -2444,7 +2362,6 @@ function renderProfile(root, params = {}) {
       </div>
 
       <div class="profile-content-grid">
-        <!-- Left: Recent Activity & Reports -->
         <div>
           <div class="profile-card">
             <div class="profile-card-header">
@@ -2470,32 +2387,8 @@ function renderProfile(root, params = {}) {
               </div>
             `).join('')}
           </div>
-
-          <div class="profile-card">
-            <div class="profile-card-header">
-              <div class="profile-card-title"><span>🗳️</span> Participatory Budgeting Activity</div>
-              <button class="btn btn-ghost btn-sm" data-page="budget">View All Proposals →</button>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:12px;">
-              <div style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
-                <div>
-                  <div style="font-size:13px;font-weight:700;color:var(--text-primary);">Campus-wide WiFi Repeater Network</div>
-                  <div style="font-size:11px;color:var(--text-muted);">Budget Ask: ₹180K • 247 votes cast</div>
-                </div>
-                <span class="badge badge-inprogress">Voting Open</span>
-              </div>
-              <div style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
-                <div>
-                  <div style="font-size:13px;font-weight:700;color:var(--text-primary);">Hostel A Electrical Rewiring Project</div>
-                  <div style="font-size:11px;color:var(--text-muted);">Budget: ₹320K • Approved by Administration</div>
-                </div>
-                <span class="badge badge-resolved">Funded & Approved</span>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <!-- Right: Profile Info & Badges Showcase -->
         <div>
           <div class="profile-card">
             <div class="profile-card-header">
@@ -2606,7 +2499,6 @@ function renderProfile(root, params = {}) {
       { id: 'community_pillar',icon: '🏛️', name: 'Community Pillar', desc: 'Recognized in top 5% most helpful campus reporters.', tier: 'Diamond' },
       { id: 'night_watch',     icon: '🌙', name: 'Night Watchman', desc: 'Reported safety or lighting issues in evening hours.', tier: 'Bronze' },
     ];
-
     const userBadges = new Set(u.badges || ['first_responder', 'eagle_eye']);
 
     return `
@@ -2633,7 +2525,6 @@ function renderProfile(root, params = {}) {
     `;
   }
 
-  /* ── 2. SOLVER (RESOLVER) TAB RENDERERS ── */
   function renderResolverOverview(u) {
     const dept = DB.find('departments', u.dept || 'd1') || { name: 'Facilities & Maintenance', sla_hours: 24 };
     const reports = DB.get('reports') || [];
@@ -2642,7 +2533,6 @@ function renderProfile(root, params = {}) {
     const resolvedCases = deptReports.filter(r => r.status === 'resolved');
 
     return `
-      <!-- Solver Stats Grid -->
       <div class="profile-stats-grid">
         <div class="pstat-card">
           <div class="pstat-icon icon-green">⚡</div>
@@ -2679,9 +2569,7 @@ function renderProfile(root, params = {}) {
       </div>
 
       <div class="profile-content-grid">
-        <!-- Left: Duty Status & Live Queue -->
         <div>
-          <!-- Live Duty Status Box -->
           <div class="profile-card">
             <div class="profile-card-header">
               <div class="profile-card-title"><span>📡</span> Solver Operational Duty Status</div>
@@ -2706,7 +2594,6 @@ function renderProfile(root, params = {}) {
             </div>
           </div>
 
-          <!-- Active Cases in Solver Dept -->
           <div class="profile-card">
             <div class="profile-card-header">
               <div class="profile-card-title"><span>🛠️</span> Active Tickets in ${dept.name} (${activeCases.length})</div>
@@ -2733,7 +2620,6 @@ function renderProfile(root, params = {}) {
           </div>
         </div>
 
-        <!-- Right: Dept info & Skills shelf -->
         <div>
           <div class="profile-card">
             <div class="profile-card-header">
@@ -2755,10 +2641,6 @@ function renderProfile(root, params = {}) {
               <div class="kv-row">
                 <span class="kv-key">SLA Window:</span>
                 <span class="kv-val">${dept.sla_hours} Hours Target</span>
-              </div>
-              <div class="kv-row">
-                <span class="kv-key">Assigned Zones:</span>
-                <span class="kv-val">${(u.assigned_zones||['Library, Hostels A/B']).join(', ')}</span>
               </div>
             </div>
           </div>
@@ -2798,7 +2680,7 @@ function renderProfile(root, params = {}) {
                 <div class="cert-badge">🏅</div>
                 <div>
                   <div class="cert-name">${c}</div>
-                  <div class="cert-issuer">Issued by Greenfield University Facility Operations Board • Verified</div>
+                  <div class="cert-issuer">Issued by ITER, SOA Campus-1 Facility Operations Board • Verified</div>
                 </div>
               </div>
             `).join('')}
@@ -2857,19 +2739,13 @@ function renderProfile(root, params = {}) {
     `;
   }
 
-  /* ── 3. ADMINISTRATION TAB RENDERERS ── */
   function renderAdminOverview(u) {
     const budgetCycle = (DB.get('budgetCycles') || [])[0] || { envelope: 1200000, allocated: 470000, spent: 293500 };
     const departments = DB.get('departments') || [];
-    const reports = DB.get('reports') || [];
-    const deptsCount = departments.length;
-    const auditLogs = DB.get('auditLog') || [];
-
     const spentPct = Math.round((budgetCycle.spent / budgetCycle.envelope) * 100);
     const allocPct = Math.round((budgetCycle.allocated / budgetCycle.envelope) * 100);
 
     return `
-      <!-- Admin Stats Grid -->
       <div class="profile-stats-grid">
         <div class="pstat-card">
           <div class="pstat-icon icon-amber">🏛️</div>
@@ -2906,9 +2782,7 @@ function renderProfile(root, params = {}) {
       </div>
 
       <div class="profile-content-grid">
-        <!-- Left: Budget Oversight & SLA Health -->
         <div>
-          <!-- Budget Meter -->
           <div class="profile-card">
             <div class="profile-card-header">
               <div class="profile-card-title"><span>💰</span> University Participatory Budget Status</div>
@@ -2930,7 +2804,6 @@ function renderProfile(root, params = {}) {
             </div>
           </div>
 
-          <!-- Department SLA Meters -->
           <div class="profile-card">
             <div class="profile-card-header">
               <div class="profile-card-title"><span>⚡</span> Department SLA Compliance Matrix</div>
@@ -2959,7 +2832,6 @@ function renderProfile(root, params = {}) {
           </div>
         </div>
 
-        <!-- Right: Executive info & Tools -->
         <div>
           <div class="profile-card">
             <div class="profile-card-header">
@@ -2977,14 +2849,6 @@ function renderProfile(root, params = {}) {
               <div class="kv-row">
                 <span class="kv-key">Office:</span>
                 <span class="kv-val">${u.location || 'Admin Block — Suite 401'}</span>
-              </div>
-              <div class="kv-row">
-                <span class="kv-key">Audit Logs Access:</span>
-                <span class="kv-val">Full Read/Write</span>
-              </div>
-              <div class="kv-row">
-                <span class="kv-key">Budget Authority:</span>
-                <span class="kv-val">Sign-off Enabled</span>
               </div>
             </div>
           </div>
@@ -3075,11 +2939,9 @@ function renderProfile(root, params = {}) {
     `;
   }
 
-  /* ── 4. SETTINGS & PRIVACY TAB ── */
   function renderSettingsTab(u) {
     const isReporter = u.role === 'reporter';
     const isResolver = u.role === 'resolver';
-    const isAdmin    = u.role === 'admin';
     const prefs = u.preferences || {};
 
     return `
@@ -3172,9 +3034,7 @@ function renderProfile(root, params = {}) {
     `;
   }
 
-  /* ── 5. EVENT BINDING ── */
   function bindProfileEvents(u) {
-    // Tab switching
     root.querySelectorAll('[data-ptab]').forEach(btn => {
       btn.addEventListener('click', () => {
         activeTab = btn.dataset.ptab;
@@ -3182,7 +3042,6 @@ function renderProfile(root, params = {}) {
       });
     });
 
-    // Edit Profile Modal
     const modal = document.getElementById('edit-profile-modal');
     const openModal = () => modal.classList.remove('hidden');
     const closeModal = () => modal.classList.add('hidden');
@@ -3192,7 +3051,6 @@ function renderProfile(root, params = {}) {
     document.getElementById('edit-modal-close')?.addEventListener('click', closeModal);
     document.getElementById('edit-modal-cancel')?.addEventListener('click', closeModal);
 
-    // Avatar picker selection
     let selectedEmoji = u.avatar || '🧑‍💻';
     root.querySelectorAll('.avatar-choice').forEach(choice => {
       choice.addEventListener('click', () => {
@@ -3202,7 +3060,6 @@ function renderProfile(root, params = {}) {
       });
     });
 
-    // Edit profile form submit
     document.getElementById('edit-profile-form')?.addEventListener('submit', (e) => {
       e.preventDefault();
       const updated = {
@@ -3219,7 +3076,6 @@ function renderProfile(root, params = {}) {
         updated.skills = skillsInput.value.split(',').map(s => s.trim()).filter(Boolean);
       }
 
-      // Update in DB and Auth
       DB.update('users', u.id, updated);
       const newAuth = { ...u, ...updated };
       Auth.login(newAuth);
@@ -3231,7 +3087,6 @@ function renderProfile(root, params = {}) {
       render();
     });
 
-    // Duty status toggle (for resolvers)
     root.querySelectorAll('[data-duty]').forEach(btn => {
       btn.addEventListener('click', () => {
         const newDuty = btn.dataset.duty;
@@ -3244,7 +3099,6 @@ function renderProfile(root, params = {}) {
       });
     });
 
-    // Share / Copy Profile ID
     document.getElementById('btn-share-profile')?.addEventListener('click', () => {
       const info = `CampusFix Profile: ${u.name} | ${u.role.toUpperCase()} | ID: ${u.id_number || u.id} | Email: ${u.email}`;
       if (navigator.clipboard) {
@@ -3258,7 +3112,6 @@ function renderProfile(root, params = {}) {
       }
     });
 
-    // Save preferences
     document.getElementById('btn-save-prefs')?.addEventListener('click', () => {
       const emailPref = document.getElementById('pref-email')?.checked;
       const smsPref   = document.getElementById('pref-sms')?.checked;
@@ -3278,7 +3131,6 @@ function renderProfile(root, params = {}) {
       showToast('success', 'Preferences Saved', 'Your privacy and notification settings are updated.');
     });
 
-    // Data Export (for admin)
     document.getElementById('btn-export-data')?.addEventListener('click', () => {
       const exportPayload = {
         exported_at: new Date().toISOString(),
@@ -3300,7 +3152,6 @@ function renderProfile(root, params = {}) {
       showToast('success', 'Data Exported!', 'Full CampusFix database downloaded as JSON.');
     });
 
-    // Broadcast Alert (for admin)
     document.getElementById('btn-broadcast-alert')?.addEventListener('click', async () => {
       const msg = prompt('Enter campus-wide administrative announcement:');
       if (msg && msg.trim()) {
@@ -3309,7 +3160,6 @@ function renderProfile(root, params = {}) {
       }
     });
 
-    // Logout triggers
     const doLogout = () => {
       Auth.logout();
       showToast('info', 'Signed Out', 'You have been signed out successfully.');
@@ -3324,7 +3174,6 @@ function renderProfile(root, params = {}) {
 
 function _ensureUserProfileFields(u) {
   if (!u) return u;
-  // If user object lacks complete fields, populate defaults based on role
   const isReporter = u.role === 'reporter';
   const isResolver = u.role === 'resolver';
   const isAdmin    = u.role === 'admin';
@@ -3339,7 +3188,7 @@ function _ensureUserProfileFields(u) {
     joined_date: u.joined_date || 'August 2023',
     badges: u.badges || ['first_responder', 'eagle_eye', 'civic_pioneer'],
     skills: u.skills || ['Electrical Systems', 'Plumbing', 'Network Routing', 'Safety Compliance'],
-    certifications: u.certifications || ['Certified Safety Specialist', 'Greenfield University Master Responder'],
+    certifications: u.certifications || ['Certified Safety Specialist', 'ITER Master Responder'],
     preferences: u.preferences || { notify_email: true, notify_sms: true, default_anon: false },
     duty_status: u.duty_status || 'on_duty',
     shift_hours: u.shift_hours || 'Shift Alpha (08:00 – 17:00)',
